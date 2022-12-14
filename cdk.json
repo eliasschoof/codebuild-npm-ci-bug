@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/codebuild-npm-ci-bug.ts",
+  "app": "npx ts-node --prefer-ts-exts bin/cdk.ts",
   "watch": {
     "include": [
       "**"
