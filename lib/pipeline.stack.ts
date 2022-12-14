@@ -21,18 +21,24 @@ export class PipelineStack extends Stack {
       commands: ['npm -v', 'npm ci', 'npm run build', 'npx cdk synth'],
     });
 
-    const brokenPipeline = new CodePipeline(this, 'BrokenPipeline', { synth: brokenSynth });
+    const brokenPipeline = new CodePipeline(this, 'BrokenPipeline', {
+      synth: brokenSynth,
+      selfMutation: false,
+    });
 
     brokenPipeline.addStage(new ApplicationStage(this, 'BrokenStage'));
 
-    // When installing the newest version of npm, pipeline will succeed
+    // Pipeline will succeed
     const workingSynth = new ShellStep('WorkingSynth', {
       input: codeSource,
       installCommands: ['npm i -g npm@latest'],
       commands: ['npm -v', 'npm ci', 'npm run build', 'npx cdk synth'],
     });
 
-    const workingPipeline = new CodePipeline(this, 'WorkingPipeline', { synth: workingSynth });
+    const workingPipeline = new CodePipeline(this, 'WorkingPipeline', {
+      synth: workingSynth,
+      selfMutation: false,
+    });
 
     workingPipeline.addStage(new ApplicationStage(this, 'WorkingStage'));
   }
