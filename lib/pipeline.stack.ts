@@ -14,18 +14,19 @@ export class PipelineStack extends Stack {
       connectionArn: props.githubConnectionArn,
     })
 
-    // Pipeline with 'npm ci' will fail
+    // Pipeline will fail
     const brokenSynth = new ShellStep('BrokenSynth', {
       input: codeSource,
-      commands: ['npm i -g npm@latest', 'npm ci'],
+      commands: ['npm -v', 'npm ci', 'npm run build', 'npx cdk synth'],
     });
 
     new CodePipeline(this, 'BrokenPipeline', { synth: brokenSynth });
 
-    // Pipeline with 'npm install' will succeed
+    // When installing the newest version of npm, pipeline will succeed
     const workingSynth = new ShellStep('WorkingSynth', {
       input: codeSource,
-      commands: ['npm install'],
+      installCommands: ['npm i -g npm@latest'],
+      commands: ['npm -v', 'npm ci', 'npm run build', 'npx cdk synth'],
     });
 
     new CodePipeline(this, 'WorkingPipeline', { synth: workingSynth });
