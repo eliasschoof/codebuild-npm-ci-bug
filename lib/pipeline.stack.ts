@@ -1,6 +1,7 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
+import { ApplicationStage } from './application.stage';
 
 interface PipelineStackProps extends StackProps {
   githubConnectionArn: string;
@@ -12,7 +13,7 @@ export class PipelineStack extends Stack {
 
     const codeSource = CodePipelineSource.connection('estrehle/codebuild-npm-ci-bug', 'main', {
       connectionArn: props.githubConnectionArn,
-    })
+    });
 
     // Pipeline will fail
     const brokenSynth = new ShellStep('BrokenSynth', {
@@ -20,7 +21,9 @@ export class PipelineStack extends Stack {
       commands: ['npm -v', 'npm ci', 'npm run build', 'npx cdk synth'],
     });
 
-    new CodePipeline(this, 'BrokenPipeline', { synth: brokenSynth });
+    const brokenPipeline = new CodePipeline(this, 'BrokenPipeline', { synth: brokenSynth });
+
+    brokenPipeline.addStage(new ApplicationStage(this, 'BrokenStage'));
 
     // When installing the newest version of npm, pipeline will succeed
     const workingSynth = new ShellStep('WorkingSynth', {
@@ -29,6 +32,8 @@ export class PipelineStack extends Stack {
       commands: ['npm -v', 'npm ci', 'npm run build', 'npx cdk synth'],
     });
 
-    new CodePipeline(this, 'WorkingPipeline', { synth: workingSynth });
+    const workingPipeline = new CodePipeline(this, 'WorkingPipeline', { synth: workingSynth });
+
+    workingPipeline.addStage(new ApplicationStage(this, 'WorkingStage'));
   }
 }
