@@ -5,11 +5,11 @@ dotenv.config({ path: join(__dirname, '..', '.env') });
 
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { CodebuildStack } from '../lib/codebuild.stack';
+import { PipelineStack } from '../lib/pipeline.stack';
 
 const GITHUB_CONNECTION_ARN = process.env['GITHUB_CONNECTION_ARN'] ?? '';
 
 const app = new cdk.App();
-new CodebuildStack(app, 'CodebuildNpmCiBugStack', {
+new PipelineStack(app, 'PipelineStack', {
   githubConnectionArn: GITHUB_CONNECTION_ARN,
 });

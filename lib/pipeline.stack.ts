@@ -2,12 +2,12 @@ import { Stack, StackProps } from 'aws-cdk-lib';
 import { CodePipeline, CodePipelineSource, ShellStep } from 'aws-cdk-lib/pipelines';
 import { Construct } from 'constructs';
 
-interface CodebuildStackProps extends StackProps {
+interface PipelineStackProps extends StackProps {
   githubConnectionArn: string;
 }
 
-export class CodebuildStack extends Stack {
-  constructor(scope: Construct, id: string, props: CodebuildStackProps) {
+export class PipelineStack extends Stack {
+  constructor(scope: Construct, id: string, props: PipelineStackProps) {
     super(scope, id, props);
 
     const codeSource = CodePipelineSource.connection('estrehle/codebuild-npm-ci-bug', 'main', {
