@@ -17,7 +17,7 @@ export class PipelineStack extends Stack {
     // Pipeline with 'npm ci' will fail
     const brokenSynth = new ShellStep('BrokenSynth', {
       input: codeSource,
-      commands: ['npm ci'],
+      commands: ['npm i -g npm@latest', 'npm ci'],
     });
 
     new CodePipeline(this, 'BrokenPipeline', { synth: brokenSynth });
